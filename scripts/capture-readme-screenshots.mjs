@@ -12,13 +12,15 @@ const sessionShots = [
   { view: 'search', filename: 'readme-open-login-browser.png', button: '#login' },
   { view: 'queue', filename: 'readme-exit-app.png', button: '#exit-app' },
 ];
+const settingsShot = { view: 'settings', filename: 'readme-settings.png' };
 const featureShots = [
+  settingsShot,
   { view: 'booklist', filename: 'readme-booklist.png' },
   { view: 'queue', filename: 'readme-download-manager.png' },
 ];
-const shots = process.argv.includes('--session-only')
-  ? sessionShots
-  : [sessionShots[0], ...featureShots, sessionShots[1]];
+let shots = [sessionShots[0], ...featureShots, sessionShots[1]];
+if (process.argv.includes('--session-only')) shots = sessionShots;
+if (process.argv.includes('--settings-only')) shots = [settingsShot];
 const assets = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/style.css': ['style.css', 'text/css'], '/favicon.svg': ['favicon.svg', 'image/svg+xml'] };
 const server = createServer(async (req, res) => {
   const asset = assets[new URL(req.url, 'http://localhost').pathname];
@@ -54,18 +56,36 @@ try {
     if (view === 'queue' && !button) await page.locator('#queue-control-panel').scrollIntoViewIfNeeded();
     else await page.evaluate(() => scrollTo(0, 0));
     await page.evaluate(() => document.fonts.ready);
+    if (view === 'settings') {
+      await page.locator('#view-settings').evaluate(section => {
+        for (const selector of ['#site-url', '#download-directory-input']) {
+          const input = section.querySelector(selector);
+          input.value = '（已隐藏）';
+          input.placeholder = '';
+        }
+        section.querySelector('#download-directory').textContent = '（已隐藏）';
+      });
+    }
     const visibleText = await page.locator('body').innerText();
     const visibleInputs = await page.locator('input:visible').evaluateAll(inputs => inputs.map(input => input.value).join('\n'));
     assert.doesNotMatch(visibleText + '\n' + visibleInputs, /(?:gh[pousr]_[a-z\d]{30,}|github_pat_[a-z\d_]{50,}|Bearer\s+[a-z\d._-]{20,}|[?&](?:token|signature|x-amz-signature)=[^\s]+|[a-z]:[\\/]+Users[\\/]+)/i, 'Visible credentials or personal machine paths must not be published');
     assert.equal(await page.locator('#connection-error').isVisible(), false);
     assert.equal(await page.locator('#demo-banner').isVisible(), true);
-    if (view !== 'search') assert.match(visibleText, /示例书单/);
+    if (view === 'booklist' || view === 'queue') assert.match(visibleText, /示例书单/);
     assert.doesNotMatch(visibleInputs, /https?:\/\/(?!demo\.example(?:\/|$))/i);
     const options = { path: fileURLToPath(new URL(filename, output)), fullPage: false };
     if (button) {
       assert.equal(await page.locator(button).isVisible(), true);
       options.style = button + ' { outline: 3px solid #bf6408; outline-offset: 4px; }';
       options.clip = { x: 0, y: 0, width: 1440, height: 550 };
+    }
+    if (view === 'settings') {
+      assert.equal(await page.locator('#site-url').inputValue(), '（已隐藏）');
+      assert.equal(await page.locator('#download-directory-input').inputValue(), '（已隐藏）');
+      assert.doesNotMatch(visibleText + '\n' + visibleInputs, /https?:\/\/|[a-z]:[\\/]|downloads\/demo/i);
+      const panel = await page.locator('#settings-form').boundingBox();
+      assert.ok(panel, 'The settings form must be visible');
+      options.clip = { x: 0, y: 0, width: 1440, height: Math.ceil(panel.y + panel.height + 14) };
     }
     await page.screenshot(options);
   }

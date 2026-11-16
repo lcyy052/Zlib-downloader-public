@@ -14,6 +14,12 @@ A local, browser-assisted ebook download manager with persistent queues and per-
 
 ![启动后，点击页面右上角标出的「打开登录浏览器」](docs/images/readme-open-login-browser.png)
 
+### 站点设置
+
+登录后，在这里确认站点、下载目录、同时下载数和浏览器运行方式。截图中的站点地址和下载目录已隐藏。
+
+![站点设置：站点地址和下载目录已隐藏，显示并发数和浏览器选项](docs/images/readme-settings.png)
+
 ### 搜索书籍
 
 ![搜索书籍：卡片视图、封面、筛选及批量选择](docs/images/readme-search.png)
