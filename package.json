@@ -1,0 +1,29 @@
+{
+  "name": "zlibrary-local-library",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "Local browser-assisted ebook search and download manager",
+  "scripts": {
+    "start": "node src/server.js",
+    "start:background": "node scripts/start-background.mjs",
+    "demo": "node src/server.js --demo",
+    "test": "node scripts/test-unit.mjs",
+    "test:ui": "node scripts/check-ui.mjs",
+    "test:views": "node scripts/check-result-views.mjs",
+    "test:queue-controls": "node scripts/check-queue-controls.mjs",
+    "test:release": "node --test test/release.test.js",
+    "release:check": "node scripts/check-release.mjs",
+    "release:prepare": "node scripts/prepare-release.mjs",
+    "screenshots:public": "node scripts/capture-public-screenshots.mjs",
+    "test:adapter": "node scripts/check-adapter.mjs",
+    "test:booklist": "node scripts/check-booklist.mjs && node scripts/check-booklist-pagination.mjs",
+    "test:download": "node scripts/check-browser-stream.mjs && node scripts/check-parallel-browser-stream.mjs",
+    "test:quota": "node scripts/check-download-limit.mjs",
+    "cleanup:duplicates": "node scripts/archive-identical-downloads.mjs",
+    "check": "node --check src/server.js && node --check src/provider.js && node --check src/browser-download.js && node --check src/browser-stream-download.js && node --check src/download-start.js && node --check src/queue.js && node --check src/existing-download.js && node --check src/browser-config.js && node --check src/download-link.js && node --check src/startup.js && node --check scripts/archive-identical-downloads.mjs && node --check public/app.js"
+  },
+  "dependencies": { "playwright-core": "^1.58.0" },
+  "engines": { "node": ">=22" }
+}

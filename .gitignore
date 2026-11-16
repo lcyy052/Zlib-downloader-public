@@ -1,0 +1,36 @@
+node_modules/
+.data/
+downloads/
+test-results/
+*.log
+
+# Local-only backups and clean publication exports
+.local/
+release/
+
+# Credentials / machine-specific configuration
+.env
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
+*storage-state*.json
+*storageState*.json
+
+# Downloads and transient output, including custom folders inside the repo
+*.epub
+*.pdf
+*.mobi
+*.azw3
+*.djvu
+*.fb2
+*.part
+*.crdownload
+*.zip
+*.log.*
+*.jsonl
+
+# Operating-system files
+.DS_Store
+Thumbs.db

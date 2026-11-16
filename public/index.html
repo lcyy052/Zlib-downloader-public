@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Z-Library · 本地书房</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/"><img src="/favicon.svg" width="38" height="38" alt=""><span>Z-Library<small>你的本地书房</small></span></a>
+    <div class="nav-label">LIBRARY WORKSPACE</div>
+    <nav aria-label="主导航">
+      <button class="nav active" data-view="search"><span>⌕</span>搜索书籍</button>
+      <button class="nav" data-view="booklist"><span>☷</span>书单导入</button>
+      <button class="nav" data-view="queue"><span>↓</span>下载管理<b id="queue-count">0</b></button>
+      <button class="nav" data-view="settings"><span>⚙</span>站点设置</button>
+    </nav>
+    <div class="sidebar-note"><span class="status-dot"></span> 本机运行 · 私有存储<p>把想读的书，<br>留在自己的书架上。</p><small>LOCAL LIBRARY / 01</small></div>
+  </aside>
+  <main>
+    <header class="topbar"><span id="breadcrumb">工作空间 / 搜索书籍</span><div><span class="mode" id="mode">本地模式</span><button class="button small" id="login">打开登录浏览器 ↗</button><button class="button small danger-button" id="exit-app">退出程序</button></div></header>
+    <div id="connection-error" class="notice danger" hidden></div>
+    <div id="demo-banner" class="notice" hidden>演示模式 · 书籍信息为示例；下载生成 .demo.txt 占位文件，不是真实电子书。</div>
+    <section id="view-search" class="view">
+      <div class="section-heading"><div><div class="eyebrow">DISCOVER YOUR NEXT READ</div><h1>好书，从这里开始。</h1><p>搜索一本书，或从一份书单出发。</p></div><div class="heading-mark" aria-hidden="true">读<span>READ / COLLECT</span></div></div>
+      <form id="search-form" class="search-panel">
+        <div class="search-line"><span aria-hidden="true">⌕</span><input id="query" name="query" required maxlength="300" placeholder="搜索书名、作者或 ISBN…" aria-label="搜索书名、作者或 ISBN"><button class="button primary" type="submit" id="search-submit">搜索书籍 <span>↗</span></button></div>
+        <div class="filters" id="search-filters">
+          <label>文件格式<select name="format"><option value="">全部格式</option><option>PDF</option><option>EPUB</option><option>MOBI</option><option>AZW3</option><option>TXT</option><option>DJVU</option><option>FB2</option></select></label>
+          <label>书籍语言<select name="language"><option value="">全部语言</option><option value="chinese">中文</option><option value="english">英文</option><option value="japanese">日文</option><option value="french">法文</option><option value="german">德文</option><option value="spanish">西班牙文</option></select></label>
+          <label>出版年份<div class="year-range"><input name="yearFrom" type="number" min="1000" max="9999" placeholder="起始" aria-label="起始年份"><span>—</span><input name="yearTo" type="number" min="1000" max="9999" placeholder="结束" aria-label="结束年份"></div></label>
+          <button type="button" class="text-button" id="reset-filters">重置筛选</button>
+        </div>
+      </form>
+      <div class="results-top"><div><h2 id="results-title">发现与收藏</h2><span id="results-meta">支持多种格式，按需选择版本</span></div><div class="result-actions"><div class="view-toggle" role="group" aria-label="搜索结果显示方式"><button type="button" data-layout="cards" aria-pressed="true">▦ 卡片</button><button type="button" data-layout="list" aria-pressed="false">☷ 列表</button></div><label class="check-label"><input type="checkbox" id="select-all">全选本页</label><button class="button primary" id="download-selected" disabled>↓ 下载所选 <span id="selected-count">0</span></button></div></div>
+      <div id="search-message" class="notice" hidden></div>
+      <div id="book-grid" class="book-grid" role="list" aria-label="搜索结果"></div>
+      <div id="search-empty" class="empty-state"><div class="empty-art">▤</div><h3>你的下一本好书，正在等你</h3><p>输入关键词开始搜索，或导入书单批量查找。<br>首次使用请先打开登录浏览器，完成网站登录。</p><button class="text-button" data-view="booklist">从书单开始 →</button></div>
+      <div class="pagination" id="pagination" hidden><button class="button" id="prev-page">← 上一页</button><span id="page-number"></span><button class="button" id="next-page">下一页 →</button></div>
+      <div class="bottom-note"><span>✳ 一个版本，一次选择，一份属于你的阅读收藏。</span><span>PDF / EPUB / MORE</span></div>
+    </section>
+    <section id="view-booklist" class="view" hidden>
+      <div class="section-heading"><div><div class="eyebrow">FROM A LIST TO YOUR LIBRARY</div><h1>把书单变成书架。</h1><p>粘贴 Z-Library 书单链接，读取全部书籍，一键批量下载。</p></div></div>
+      <form id="website-booklist-form" class="panel"><h2>导入网站书单</h2><p>支持你自己创建的书单，以及当前账号能够访问的他人书单。</p><div class="booklist-url-row"><input id="website-booklist-url" type="url" required placeholder="https://zh.z-library.sk/booklist/…" aria-label="Z-Library 书单链接"><button class="button primary" id="import-website-booklist" type="submit">读取书单</button><button class="button" id="stop-website-booklist" type="button" hidden>停止读取</button></div><p class="list-hint">读取时会自动加载“显示更多”，保留书单中的原始版本；读取完成后再选择下载。</p></form>
+      <div class="results-top"><div><h2 id="website-booklist-title">书单中的书籍</h2><span id="website-booklist-meta">粘贴书单链接开始</span></div><div class="result-actions"><label class="check-label"><input type="checkbox" id="website-booklist-select-all">全选书单</label><button class="button" id="pause-website-downloads" hidden>暂停本书单</button><button class="button" id="resume-website-downloads" hidden>继续本书单</button><button class="text-button" id="cancel-website-downloads" hidden>取消本书单</button><button class="button" id="download-website-selected" disabled>下载所选</button><button class="button primary" id="download-website-all" disabled>↓ 下载整份书单</button></div></div>
+      <div id="website-download-gate" class="download-gate" hidden><span>总队列已暂停：登录验证不会自动开始下载。请到下载管理顶部开启总队列。</span><button class="button" id="go-download-controls">前往下载总控 →</button></div>
+      <div id="website-booklist-message" class="notice" hidden></div><div id="website-booklist-progress"></div>
+      <div id="website-booklist-books"><div class="empty-inline">尚未读取网站书单</div></div>
+      <div id="website-booklist-pagination" class="pagination" hidden><button class="button" id="website-booklist-prev">← 上一页</button><span id="website-booklist-page"></span><button class="button" id="website-booklist-next">下一页 →</button></div>
+      <details class="text-import"><summary>其他方式：从 TXT / CSV 匹配书籍</summary>
+      <div class="panel"><div class="panel-title"><h2>导入书单</h2><label class="button small file-button">选择 TXT / CSV<input type="file" id="booklist-file" accept=".txt,.csv,text/plain,text/csv"></label></div>
+        <textarea id="booklist-text" rows="7" placeholder="每行一本书，例如：&#10;红楼梦&#10;Pride and Prejudice&#10;&#10;也支持 CSV 表头：书名,作者,ISBN" aria-label="书单内容"></textarea>
+        <div class="list-hint">UTF-8 编码 · 每批最多 200 本 · 自动去重 · CSV 支持书名、作者和 ISBN 列</div>
+        <div class="filters" id="list-filters"></div>
+        <div class="panel-actions"><button class="button" id="parse-list">预览书单</button><button class="button primary" id="match-list">匹配候选版本 →</button><button class="button" id="stop-match" hidden>停止匹配</button></div>
+      </div>
+      <div class="results-top"><div><h2>匹配结果</h2><span id="match-meta">候选版本需要你确认后才会下载</span></div><button class="button primary" id="download-matches" disabled>↓ 下载已确认版本</button></div>
+      <div id="match-message" class="notice" hidden></div><div id="match-results" class="match-results"><div class="empty-inline">还没有导入书单</div></div>
+      </details>
+    </section>
+    <section id="view-queue" class="view" hidden>
+      <div class="section-heading"><div><div class="eyebrow">YOUR READING COLLECTION</div><h1>让阅读，慢慢积累。</h1><p>有序下载，保留记录；中断后可以重新尝试。</p></div></div>
+      <div class="panel queue-control-panel" id="queue-control-panel"><div class="queue-control-copy"><div class="eyebrow">下载总控 · 书单与单本任务</div><h2 id="queue-control-title" aria-live="polite">正在读取队列状态…</h2><p id="queue-control-description"></p><p class="queue-control-scope">“暂停全部下载”控制整个队列；每个书单的按钮只控制本书单。</p></div><div class="queue-control-actions"><button class="button primary" id="resume-queue" disabled>开始 / 继续下载</button><button class="button" id="pause-queue" hidden disabled>暂停全部下载</button></div></div>
+      <div class="stats" id="queue-stats"></div>
+      <div id="queue-progress"></div>
+      <div class="results-top"><div><h2>书单下载记录</h2><span>每个书单可独立暂停、继续、取消和查看详情</span></div><div class="result-actions"><label class="check-label"><input type="checkbox" id="select-all-batches">全选书单记录</label><button class="button" id="delete-selected-batches" disabled>删除所选 <span id="batch-selected-count">0</span></button></div></div>
+      <div id="booklist-queue-list" class="booklist-queue-list"><div class="empty-inline">还没有书单下载记录</div></div>
+      <div class="results-top"><div><h2>单本下载任务</h2><span id="queue-meta">文件保存在已配置的下载目录</span></div><div class="result-actions"><button class="button" id="clear-selected-queue" disabled>清理所选 <span id="queue-selected-count">0</span></button><button class="text-button" id="clear-queue">清理全部已结束</button></div></div>
+      <div class="notice" id="queue-error" hidden></div><div id="queue-list" class="queue-list"></div>
+    </section>
+    <section id="view-settings" class="view" hidden>
+      <div class="section-heading"><div><div class="eyebrow">MAKE YOURSELF AT HOME</div><h1>你的书房，你来设置。</h1><p>使用正常网站权限，登录状态只保存在本机。</p></div></div>
+      <form id="settings-form" class="panel settings-panel"><h2>网站与下载</h2><label>站点地址<input id="site-url" type="url" required placeholder="https://zh.z-library.sk/"></label><label>下载根目录<input id="download-directory-input" type="text" required placeholder="D:\Books"></label><label>同时下载数<select id="download-concurrency"><option value="1">1 本（最稳）</option><option value="2">2 本（推荐）</option><option value="3">3 本（较快）</option></select></label><label>登录与搜索使用的浏览器<select id="browser-choice"><option value="chrome">Google Chrome（推荐）</option><option value="edge">Microsoft Edge</option><option value="auto">自动选择（Chrome 优先）</option></select></label><label>浏览器运行方式<select id="browser-mode"><option value="background">后台静默（推荐）</option><option value="visible">显示浏览器窗口（排查问题）</option></select></label><p>后台静默模式使用正常浏览器会话，窗口会移到屏幕外并保持最小化，网页在后台标签页中打开。新任务使用新的下载目录；已有任务和文件仍保留。</p><button class="button primary" type="submit">保存设置</button></form>
+      <form id="quota-recovery-form" class="panel settings-panel"><h2>额度恢复后自动继续</h2><label>自动恢复<select id="quota-auto-resume"><option value="off">关闭（手动继续）</option><option value="on">开启（确认额度恢复后继续）</option></select></label><label>检查间隔（分钟）<input id="quota-check-minutes" type="number" min="5" max="1440" step="1" value="30" required></label><p>只在每日额度用完而自动暂停时，后台读取网站最新额度，不会试下载。默认关闭，默认检查间隔 30 分钟；未登录、需要验证、网络异常或 HTTP 429 时保持暂停。手动保持暂停及单独暂停的书单不会自动恢复。程序退出后不检查，重新启动后可继续检查额度暂停的队列。</p><p id="quota-recovery-status"></p><p id="quota-check-result" hidden></p><button class="button primary" type="submit">保存自动恢复设置</button> <button class="button" type="button" id="quota-check-now">只检查当前额度</button></form>
+      <div class="panel settings-panel"><h2>当前队列等待额度</h2><p>当前队列若是手动暂停，可在确认网站额度已满后，明确转为“等待额度恢复后自动继续”。只读取额度、不试下载，书单的单独暂停仍保留。此操作会开启上方设置的自动恢复间隔。</p><button type="button" class="button" id="quota-wait-current">让当前队列等待额度恢复</button></div>
+      <div class="panel settings-panel"><h2>浏览器会话</h2><p id="browser-session">尚未打开登录浏览器。</p><button type="button" class="button" id="check-browser">检查当前页面</button><p>搜索、书单读取和下载默认在后台进行；只有点击右上角“打开登录浏览器”时才显示窗口，方便登录或处理网站验证。首次切换浏览器后需重新登录。</p></div>
+      <div class="panel settings-panel"><h2>本地文件与会话</h2><dl><dt>下载位置</dt><dd id="download-directory"></dd><dt>会话存储</dt><dd>Chrome：.data/live/browser-profile-chrome；Edge：.data/live/browser-profile（独立浏览器配置）</dd><dt>下载策略</dt><dd>按设置并行下载；网站书单按书单名称建立独立文件夹，并先检查该文件夹内已有文件。单本失败不会影响其他任务，可单独重试。</dd></dl><p>任务与网站书单会保留；重启后点击「继续下载」恢复待处理任务。TXT/CSV 匹配结果仅在本次运行中保留。</p><p>仅下载你有权获取的内容，遵守网站额度与访问规则。</p></div>
+    </section>
+    <footer><span>Z-Library · 本地书房</span><span>为专注阅读留一点空间。</span></footer>
+  </main><div id="toast" role="status" aria-live="polite" hidden></div>
+</body></html>
