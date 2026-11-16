@@ -49,6 +49,8 @@ A local, browser-assisted ebook download manager with persistent queues and per-
 
 主要在 Windows 上开发和验证。需要安装 Google Chrome 或 Microsoft Edge，以及 Node.js 22 或更新版本；建议 Node.js 24.14+，以使用当前实现的动态 HTTP/HTTPS 代理接口。未在 macOS/Linux 验证完整的真实浏览器下载流程。
 
+### 手动安装
+
 从仓库下载并解压源码后，在项目目录执行：
 
 ```powershell
@@ -57,6 +59,23 @@ npm run start:background
 ```
 
 Windows 也可双击 `start.bat`：它会检查 Node.js、在需要时安装依赖，并启动独立后台服务。默认网页地址为 [http://127.0.0.1:3210](http://127.0.0.1:3210)，端口不可用时会寻找附近空闲端口，以启动输出的地址为准。
+
+### 用智能体安装
+
+将下面这段提示词复制给能在你电脑上运行终端命令的智能体。安装完成后，在同一台电脑的浏览器打开它给出的地址。
+
+```text
+请帮我在这台电脑上安装并启动 Z-Library 本地书房。
+仓库：https://github.com/lcyy052/Zlib-downloader-public
+
+1. 先阅读仓库 README，检查 Git、Node.js 22 或更新版本、npm，以及 Chrome 或 Edge。缺少的工具请从官方来源安装，遇到需要我授权的步骤请说明。
+2. 把仓库克隆到合适的目录。如果已经安装过，先检查该目录的状态，保留现有设置、下载记录和书籍文件。
+3. 在项目目录运行 npm ci，再运行 npm run start:background -- --no-open。
+4. 用启动输出中的实际地址检查 /api/health。确认服务可用后，告诉我安装目录和可点击的本地地址。如果安装或启动失败，请告诉我失败在哪一步。
+5. 提醒我先在页面右上角点击「打开登录浏览器」，由我完成账号登录和网站验证。用完后提醒我点击「退出程序」。安装期间请不要索要我的密码、Cookie 或验证码，也不要试下载书籍。
+```
+
+### 启动后的操作
 
 1. **启动后先登录。** 打开本地书房网页，先点击右上角的「打开登录浏览器」。在软件打开的浏览器窗口里登录你的 Z-Library 账号，按网站提示完成验证，再回到本地书房。
 2. 在「站点设置」确认 HTTPS 站点地址、下载目录、浏览器运行方式和并发数。
