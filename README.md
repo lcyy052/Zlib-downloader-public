@@ -8,6 +8,12 @@ A local, browser-assisted ebook download manager with persistent queues and per-
 
 ## 功能预览
 
+### 打开登录浏览器
+
+启动后先点击右上角标出的「打开登录浏览器」。在软件打开的窗口里登录账号，按网站提示完成验证，再回到本地书房。
+
+![启动后，点击页面右上角标出的「打开登录浏览器」](docs/images/readme-open-login-browser.png)
+
 ### 搜索书籍
 
 ![搜索书籍：卡片视图、封面、筛选及批量选择](docs/images/readme-search.png)
@@ -20,7 +26,13 @@ A local, browser-assisted ebook download manager with persistent queues and per-
 
 ![下载管理：使用演示数据展示下载总控、整体进度及多个书单记录](docs/images/readme-download-manager.png)
 
-搜索图保留用户指定的实际搜索界面。书单导入和下载管理图使用隔离的固定演示数据，书单名称、链接、书籍、下载统计与额度状态均为示例，不读取真实账号或下载记录。截图仅展示界面功能，不代表网站当前可用性、真实额度或下载速度。
+### 退出程序
+
+用完后点击右上角标出的「退出程序」并确认。软件会停止后台服务并保留下载记录。
+
+![使用完毕后，点击页面右上角标出的「退出程序」并确认](docs/images/readme-exit-app.png)
+
+搜索图保留用户指定的实际搜索界面。其余截图使用隔离的固定演示数据，书单名称、链接、书籍、下载统计与额度状态均为示例，不读取真实账号或下载记录。截图仅展示界面功能，不代表网站当前可用性、真实额度或下载速度。
 
 - 按书名、作者、ISBN 搜索，按格式、语言、年份筛选；卡片 / 列表视图、封面回退。
 - 网站书单分批读取；可添加多个书单，分别暂停、继续、取消或删除记录。
