@@ -192,6 +192,16 @@ CI 配置执行语法检查、核心回归及发布审查；尚未在远程 GitH
 
 `npm run release:check` 审查待发布文件；`npm run release:prepare` 创建不包含 Git 历史、运行数据或依赖目录的干净源码目录与 ZIP。历史中可能仍有旧个人文档，首次公开建议从干净包创建新仓库，不直接推送本地完整历史。
 
+## Star History
+
+<a href="https://www.star-history.com/?repos=lcyy052%2Fzlib-downloader-public&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=lcyy052/zlib-downloader-public&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=lcyy052/zlib-downloader-public&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=lcyy052/zlib-downloader-public&type=date&legend=top-left" />
+ </picture>
+</a>
+
 ## 许可证
 
 本项目源码采用 [MIT License](LICENSE)。第三方依赖保留各自许可证；该授权不包含网站内容、电子书或第三方商标的使用授权。包中的 `private: true` 仅防止意外发布到 npm，不妨碍在 GitHub 公开源码。
